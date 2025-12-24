@@ -1,0 +1,8 @@
+{
+    "Setting.DistanceForward.Title": "Camera Distance Forward",
+    "Setting.DistanceForward.Description": "How far in front of the truck the camera should be placed.",
+    "Setting.HeightAbove.Title": "Camera Height Above",
+    "Setting.HeightAbove.Description": "How high above the truck the camera should be placed.",
+    "Setting.FieldOfView.Title": "Camera Field of View",
+    "Setting.FieldOfView.Description": "The field of view (FOV) for the camera."
+}
