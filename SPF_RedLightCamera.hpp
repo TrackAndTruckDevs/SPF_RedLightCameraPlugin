@@ -43,7 +43,7 @@
 // #include <SPF_VirtInput_API.h>      // For SPF_VirtualDevice_Handle
 #include <SPF_Camera_API.h> // For SPF_Camera_API
 // #include <SPF_GameLog_API.h>        // For SPF_GameLog_Callback_Handle
-// #include <SPF_JsonReader_API.h>     // For SPF_JsonValue_Handle, SPF_JsonReader_API (often with OnSettingChanged)
+// #include <SPF_JsonReader_API.h>     // For SPF_JsonValue_Handle, SPF_JsonReader_API (often with OnSettingChanged). Functions: Json_GetType, Json_GetString, etc.
 
 // =================================================================================================
 // 2. Standard Library Includes
@@ -150,12 +150,13 @@ namespace SPF_RedLightCamera
   // These are the mandatory functions that the framework expects the plugin to implement.
 
   /**
-   * @brief Fills the manifest structure with this plugin's metadata.
+   * @brief Constructs the plugin's manifest using the provided Builder API.
    * @details This function is called by the framework *before* the plugin is loaded to learn
    * about its name, version, and other basic properties.
-   * @param[out] out_manifest A reference to the manifest structure to be filled.
+   * @param h An opaque handle to the manifest builder object.
+   * @param api A table of functions provided by the framework to populate the manifest.
    */
-  void GetManifestData(SPF_ManifestData_C &out_manifest);
+  void BuildManifest(SPF_Manifest_Builder_Handle *h, const SPF_Manifest_Builder_API *api);
 
   /**
    * @brief Called first when the plugin DLL is loaded into memory.
@@ -205,10 +206,10 @@ namespace SPF_RedLightCamera
    * @brief Called when a setting is changed externally (e.g., via the main settings UI or by another plugin).
    * @details Uncomment this if your plugin defines custom settings in its manifest and needs to react
    *          to changes made by the user or other parts of the framework.
-   * @param config_handle The configuration context handle for this plugin.
+   * @param h The configuration context handle for this plugin.
    * @param keyPath The full path to the setting that changed (e.g., "settings.some_bool").
    */
-  void OnSettingChanged(SPF_Config_Handle *config_handle, const char *keyPath);
+  void OnSettingChanged(SPF_Config_Handle *h, const char *keyPath);
 
   /**
    * @brief Called once to allow the plugin to register its UI rendering callbacks.
