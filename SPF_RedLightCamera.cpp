@@ -45,8 +45,8 @@ namespace SPF_RedLightCamera
         // This section provides the basic identity of your plugin.
         {
             api->Info_SetName(h, PLUGIN_NAME);
-            api->Info_SetVersion(h, "1.0.3");
-            api->Info_SetMinFrameworkVersion(h, "1.1.3");
+            api->Info_SetVersion(h, "1.1.5");
+            api->Info_SetMinFrameworkVersion(h, "1.1.4");
             api->Info_SetAuthor(h, "Track'n'Truck Devs");
             api->Info_SetDescriptionLiteral(h, "Captures red light violation screenshots. Automatically triggers a camera at a custom distance, height, and FOV, with live in-game UI adjustments for the perfect shot.");
 

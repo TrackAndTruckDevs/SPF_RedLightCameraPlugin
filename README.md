@@ -1,4 +1,17 @@
-# SPF Red Light Camera Plugin
+<h1 align="center">SPF Red Light Camera Plugin</h1>
+
+<p align="center">
+    <a href="https://github.com/TrackAndTruckDevs/SPF_RedLightCameraPlugin/releases/latest/" target="_blank" title="SPF Red Light Camera Plugin releas"><img alt="GitHub Release" src="https://img.shields.io/github/v/release/TrackAndTruckDevs/SPF_RedLightCameraPlugin"></a>
+    <a href="/LICENSE" title="SPF Red Light Camera Plugin license"><img alt="GitHub License" src="https://img.shields.io/github/license/TrackAndTruckDevs/SPF_RedLightCameraPlugin"></a>
+</p>
+
+<p align="center">
+    <a href="https://www.patreon.com/TrackAndTruckDevs" target="_blank" title="Support us on Patreon"><img alt="Patreon" src="https://img.shields.io/badge/patreon-Becoming a patron-3404021712?style=flat&logo=patreon"></a>
+    <a href="https://github.com/TrackAndTruckDevs/SPF_RedLightCameraPlugin/stargazers" title="Liked it? Starred"><img src="https://img.shields.io/github/stars/TrackAndTruckDevs/SPF_RedLightCameraPlugin?style=flat&logo=github" alt="Stars" /></a>
+    <a href="https://youtube.com/@TrackAndTruck" target="_blank" title="Subscribe to our channel"><img alt="Youtube" src="https://img.shields.io/badge/youtube-subscribe-orange?logo=youtube&style=flat"></a>
+</p>
+
+---
 
 This plugin automatically takes a screenshot from a unique, customized camera angle every time you get a ticket in ATS and ETS2 for running a red light.
 
