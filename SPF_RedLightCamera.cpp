@@ -9,8 +9,8 @@
 #include "SPF_RedLightCamera.hpp" // Always include your own header first
 #define _USE_MATH_DEFINES
 #include <cmath>
-#include <cstring>                // For C-style string manipulation functions like strncpy_s.
-#include <string>                 // For std::string and std::to_string
+#include <cstring> // For C-style string manipulation functions like strncpy_s.
+#include <string>  // For std::string and std::to_string
 
 namespace SPF_RedLightCamera
 {
@@ -45,14 +45,15 @@ namespace SPF_RedLightCamera
         // This section provides the basic identity of your plugin.
         {
             api->Info_SetName(h, PLUGIN_NAME);
-            api->Info_SetVersion(h, "1.1.5");
-            api->Info_SetMinFrameworkVersion(h, "1.1.4");
+            api->Info_SetVersion(h, "1.1.6");
+            api->Info_SetMinFrameworkVersion(h, "1.1.6");
             api->Info_SetAuthor(h, "Track'n'Truck Devs");
             api->Info_SetDescriptionLiteral(h, "Captures red light violation screenshots. Automatically triggers a camera at a custom distance, height, and FOV, with live in-game UI adjustments for the perfect shot.");
 
             api->Info_SetEmail(h, "mailto:spf.framework@gmail.com");
             api->Info_SetYoutubeUrl(h, "https://www.youtube.com/@TrackAndTruck");
             api->Info_SetPatreonUrl(h, "https://www.patreon.com/TrackAndTruckDevs");
+            api->Info_SetGithubUrl(h, "https://github.com/TrackAndTruckDevs/SPF_RedLightCameraPlugin");
         }
 
         // --- 2.2. Configuration Policy ---
@@ -89,11 +90,11 @@ namespace SPF_RedLightCamera
         // =============================================================================================
 
         // --- Custom Settings Metadata ---
-        
+
         auto AddSliderMeta = [&](const char *key, const char *title, const char *desc, float min, float max, const char *format)
         {
-            std::string params = "{ \"min\": " + std::to_string(min) + 
-                                 ", \"max\": " + std::to_string(max) + 
+            std::string params = "{ \"min\": " + std::to_string(min) +
+                                 ", \"max\": " + std::to_string(max) +
                                  ", \"format\": \"" + format + "\" }";
             api->Meta_AddCustomSetting(h, key, title, desc, "slider", params.c_str(), false);
         };
@@ -161,7 +162,6 @@ namespace SPF_RedLightCamera
         // Localization API
         // Requires: SPF_Localization_API.h
         */
-       
     }
 
     void OnActivated(const SPF_Core_API *core_api)
@@ -174,16 +174,16 @@ namespace SPF_RedLightCamera
             g_ctx.gameConsoleAPI = g_ctx.coreAPI->console;
             g_ctx.uiAPI = g_ctx.coreAPI->ui;
 
-                    if (g_ctx.coreAPI->telemetry)
-                    {
-                        g_ctx.telemetryHandle = g_ctx.coreAPI->telemetry->Tel_GetContext(PLUGIN_NAME);
-                    }
-                }
-            
-                if (g_ctx.telemetryHandle && g_ctx.coreAPI && g_ctx.coreAPI->telemetry)
-                {
-                    g_ctx.gameplayEventsSubscription = g_ctx.coreAPI->telemetry->Tel_RegisterForGameplayEvents(g_ctx.telemetryHandle, OnGameplayEvents, &g_ctx);
-                }
+            if (g_ctx.coreAPI->telemetry)
+            {
+                g_ctx.telemetryHandle = g_ctx.coreAPI->telemetry->Tel_GetContext(PLUGIN_NAME);
+            }
+        }
+
+        if (g_ctx.telemetryHandle && g_ctx.coreAPI && g_ctx.coreAPI->telemetry)
+        {
+            g_ctx.gameplayEventsSubscription = g_ctx.coreAPI->telemetry->Tel_RegisterForGameplayEvents(g_ctx.telemetryHandle, OnGameplayEvents, &g_ctx);
+        }
         if (g_ctx.loggerHandle && g_ctx.formattingAPI)
         {
             char log_buffer[256];
@@ -486,23 +486,31 @@ namespace SPF_RedLightCamera
     // Remember to also uncomment their prototypes in SPF_RedLightCamera.hpp and register them
     // in OnActivated or OnRegisterUI as appropriate.
 
-    void OnSettingChanged(SPF_Config_Handle* config_handle, const char* keyPath) {
+    void OnSettingChanged(SPF_Config_Handle *config_handle, const char *keyPath)
+    {
         // A setting has changed. Check the keyPath and use the config_handle
         // with the Config API to get the new value.
-        if (!g_ctx.loadAPI || !g_ctx.loadAPI->config) {
-            if (g_ctx.loggerHandle) g_ctx.loadAPI->logger->Log(g_ctx.loggerHandle, SPF_LOG_ERROR, "OnSettingChanged: LoadAPI or Config API not available.");
+        if (!g_ctx.loadAPI || !g_ctx.loadAPI->config)
+        {
+            if (g_ctx.loggerHandle)
+                g_ctx.loadAPI->logger->Log(g_ctx.loggerHandle, SPF_LOG_ERROR, "OnSettingChanged: LoadAPI or Config API not available.");
             return;
         }
-        const auto config = g_ctx.loadAPI->config; 
-    
-        if (strcmp(keyPath, "settings.distance_forward") == 0) {
+        const auto config = g_ctx.loadAPI->config;
+
+        if (strcmp(keyPath, "settings.distance_forward") == 0)
+        {
             g_ctx.setting_distance_forward = config->Cfg_GetFloat(config_handle, keyPath, 25.0f);
-        } else if (strcmp(keyPath, "settings.height_above") == 0) {
+        }
+        else if (strcmp(keyPath, "settings.height_above") == 0)
+        {
             g_ctx.setting_height_above = config->Cfg_GetFloat(config_handle, keyPath, 4.0f);
-        } else if (strcmp(keyPath, "settings.field_of_view") == 0) {
+        }
+        else if (strcmp(keyPath, "settings.field_of_view") == 0)
+        {
             g_ctx.setting_field_of_view = config->Cfg_GetFloat(config_handle, keyPath, 70.0f);
         }
-    
+
         // Live Preview: Call PositionAndOrientRedLightCamera to immediately apply changes
         PositionAndOrientRedLightCamera();
     }
@@ -743,7 +751,7 @@ namespace SPF_RedLightCamera
 
         float width, height;
         // Get the current viewport size to draw the rectangle across the entire screen.
-        ui->UI_GetViewportSize(&width, &height);
+        ui->UI_GetMainViewportSize(&width, &height);
 
         // Draw a white rectangle that covers the whole screen with the current flash_alpha transparency.
         // The RGBA components (1.0f, 1.0f, 1.0f, g_ctx.flash_alpha) define a white color with variable opacity.
@@ -865,11 +873,11 @@ namespace SPF_RedLightCamera
         {
             char log_buffer[512];
             g_ctx.formattingAPI->Fmt_Format(log_buffer, sizeof(log_buffer),
-                                        "PositionAndOrientRedLightCamera: Full execution complete."
-                                        " Set Local Pos: (%.2f, %.2f, %.2f),"
-                                        " Set Orientation: (Yaw: %.2f, Pitch: %.2f),"
-                                        " Set FOV: %.1f",
-                                        final_local_pos_to_set.x, final_local_pos_to_set.y, final_local_pos_to_set.z, yaw, pitch, g_ctx.setting_field_of_view);
+                                            "PositionAndOrientRedLightCamera: Full execution complete."
+                                            " Set Local Pos: (%.2f, %.2f, %.2f),"
+                                            " Set Orientation: (Yaw: %.2f, Pitch: %.2f),"
+                                            " Set FOV: %.1f",
+                                            final_local_pos_to_set.x, final_local_pos_to_set.y, final_local_pos_to_set.z, yaw, pitch, g_ctx.setting_field_of_view);
             g_ctx.loadAPI->logger->Log(g_ctx.loggerHandle, SPF_LOG_INFO, log_buffer);
         }
     }
@@ -914,7 +922,7 @@ namespace SPF_RedLightCamera
                 // Optional callbacks are set to nullptr by default.
                 // Uncomment and assign your implementation if you use them.
                 // exports->OnGameWorldReady = OnGameWorldReady; // Assign your OnGameWorldReady function for game-world-dependent logic.
-                exports->OnRegisterUI = OnRegisterUI; // Assign your OnRegisterUI function if you have UI windows.
+                exports->OnRegisterUI = OnRegisterUI;         // Assign your OnRegisterUI function if you have UI windows.
                 exports->OnSettingChanged = OnSettingChanged; // Assign your OnSettingChanged function if you implement it.
                 return true;
             }
